@@ -16,16 +16,14 @@ Bot de Discord que registra a última mensagem de cada pessoa do servidor.
 2. Em **OAuth2 → URL Generator**, marque os escopos `bot` e `applications.commands` e as permissões
    *View Channels*, *Send Messages* e *Read Message History*. Abra a URL gerada e adicione o bot ao servidor.
 3. No Discord, ative o Modo Desenvolvedor (Configurações → Avançado) e use "Copiar ID" no servidor e no canal de relatórios.
-4. No homelab:
-
-```sh
-cp .env.example .env   # preencha
-mkdir -p data          # precisa pertencer ao PUID/PGID do .env
-docker compose up -d --build
-docker compose logs -f
-```
+4. Deploy:
+   - **Coolify:** crie um recurso a partir do repositório com o build pack **Docker Compose** e preencha as variáveis
+     (`DISCORD_TOKEN`, `GUILD_ID`, `REPORT_CHANNEL_ID`...) na aba *Environment Variables*.
+   - **Docker puro:** `cp .env.example .env`, preencha e rode `docker compose up -d --build`.
 
 ## Armazenamento
+
+Os dados ficam no volume `bot-data` (montado em `/data`).
 
 `data/state.json` é o estado principal e `data/state.json.bak` é a última versão validada.
 Se o principal estiver ausente ou corrompido na inicialização, ele é movido para `state.json.corrupt-<ts>`,

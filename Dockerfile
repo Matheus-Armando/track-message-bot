@@ -3,8 +3,9 @@ WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY *.go ./
-RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /bot .
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /bot . && mkdir /data
 
-FROM gcr.io/distroless/static
+FROM gcr.io/distroless/static:nonroot
+COPY --from=build --chown=65532:65532 /data /data
 COPY --from=build /bot /bot
 ENTRYPOINT ["/bot"]
